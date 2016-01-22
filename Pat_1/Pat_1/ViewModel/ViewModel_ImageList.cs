@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -14,83 +15,7 @@ namespace Pat_1.ViewModel
     public class ViewModel_ImageList : ViewModelBase
     {
 
-        private Model.lista_klasa _selecteditem;
-        public Model.lista_klasa selecteditem
-        {
-            get { return _selecteditem; }
-            set
-            {
-                if (_selecteditem != value)
-                {
-                    _selecteditem = value;
-                    PropertyChangedUpdate("selecteditem");
-                }
-            }
-        }
-
-        private ObservableCollection<Model.lista_klasa> lista_;
-        public ObservableCollection<Model.lista_klasa> lista
-        {
-            get { return lista_; }
-            set
-            {
-                if (lista_ != value)
-                {
-                    lista_ = value;
-                    PropertyChangedUpdate("lista");
-                }
-            }
-        }
-
-        /*#region Binding szerokosci i wysokosci tabelki z obrazkami 
-        private int wysokosc1_;
-        public int wysokosc1
-        {
-            get { return wysokosc1_; }
-            set
-            {
-                if (wysokosc1_ != value)
-                {
-                    wysokosc1_ = value;
-                    PropertyChangedUpdate("wysokosc1");
-                }
-            }
-        }
-
-        private int szerokosc1_;
-        public int szerokosc1
-        {
-            get { return szerokosc1_; }
-            set
-            {
-                if (szerokosc1_ != value)
-                {
-                    szerokosc1_ = value;
-                    PropertyChangedUpdate("szerokosc1");
-                }
-            }
-        }
-
-        private int szerokosc2_;
-        public int szerokosc2
-        {
-            get { return szerokosc2_; }
-            set
-            {
-                if (szerokosc2_ != value)
-                {
-                    szerokosc2_ = value;
-                    PropertyChangedUpdate("szerokosc2");
-                }
-            }
-        }
-
-#endregion*/
-
-        public void wybrano_obrazek()
-        {
-            Data.Data.ktory_obrazek_zaznaczony = selecteditem.id;
-        }
+        public ICommand TheTapCommand { get; set; }
 
         public ViewModel_ImageList()
         {
@@ -103,6 +28,8 @@ namespace Pat_1.ViewModel
                 var wczytywanie_o = wczytywanie_obrazkow();
                 
             }
+
+            TheTapCommand = new Pomocnicze.RelayCommand(pars => wybrano_obrazek());
 
         }
 
@@ -129,6 +56,44 @@ namespace Pat_1.ViewModel
 
                 }
                 i++;
+            }
+        }
+
+        public void wybrano_obrazek()
+        {
+            if (selecteditem.id != Data.Data.ktory_obrazek_zaznaczony)
+            {
+                Data.Data.ktory_obrazek_zaznaczony = selecteditem.id;
+                Frame rootFrame = Window.Current.Content as Frame;
+                rootFrame.Navigate(typeof(MainPage));
+            }
+        }
+
+        private Model.lista_klasa _selecteditem;
+        public Model.lista_klasa selecteditem
+        {
+            get { return _selecteditem; }
+            set
+            {
+                if (_selecteditem != value)
+                {
+                    _selecteditem = value;
+                    PropertyChangedUpdate("selecteditem");
+                }
+            }
+        }
+
+        private ObservableCollection<Model.lista_klasa> lista_;
+        public ObservableCollection<Model.lista_klasa> lista
+        {
+            get { return lista_; }
+            set
+            {
+                if (lista_ != value)
+                {
+                    lista_ = value;
+                    PropertyChangedUpdate("lista");
+                }
             }
         }
 

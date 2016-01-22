@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pat_1.Pomocnicze;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,91 +30,17 @@ namespace Pat_1
     /// </summary>
     public sealed partial class MainPage : Page
     {
+
         public MainPage()
         {
 
             this.InitializeComponent();
-            this.DataContext = new ViewModel.ViewModelMain();
 
-        }
+            CaptureElement ce = new CaptureElement();
+            Grid_Image.Children.Add(ce);
 
-        public ViewModel.ViewModelMain ViewModel
-        {
-            get { return DataContext as ViewModel.ViewModelMain; }
-        }
+            this.DataContext = new ViewModel.ViewModelMain(ref ce);
 
-        private void Image_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            ViewModel.NastepnyObrazek();
-        }
-
-        async private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if (Data.Data.CameraTurnOn == false)
-            {
-                try
-                {
-                    Data.Data._MediaCapture = new MediaCapture();
-                    await Data.Data._MediaCapture.InitializeAsync();
-                    kamera.Source = Data.Data._MediaCapture;
-                    await Data.Data._MediaCapture.StartPreviewAsync();
-                    ImageListButton.Content = "Close Camera";
-                    Data.Data.CameraTurnOn = true;
-                    KameraButton.Content = "Take a foto";
-                }
-                catch
-                {
-                    ImageListButton.Content = "Images List";
-                }
-            }
-            else
-            {
-                kamera.Source = null;
-                MediaCapture takephotoManager = new MediaCapture();
-                await takephotoManager.InitializeAsync();
-
-                ImageEncodingProperties imgFormat = ImageEncodingProperties.CreateJpeg();
-
-                StorageFile file;
-                int i = 0;
-                while (true)
-                {
-                    try
-                    {
-                        file = await Windows.Storage.KnownFolders.PicturesLibrary.CreateFileAsync
-                             ("Photo" + i.ToString() +".jpg", CreationCollisionOption.FailIfExists);
-                        break;
-                    }
-                    catch
-                    {
-                        i++;
-                        continue;
-                    }
-                }
-
-                var task = ViewModel.reflesh_po_zdjeciu();
-
-                await takephotoManager.CapturePhotoToStorageFileAsync(imgFormat, file);
-
-                KameraButton.Content = "Camera View";
-                ImageListButton.Content = "Images List";
-                Data.Data.CameraTurnOn = false;
-            }
-        }
-
-        async private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            if(Data.Data.CameraTurnOn == false)
-                this.Frame.Navigate(typeof(View.ImageList));
-            else
-            {
-                kamera.Source = null;
-                await Data.Data._MediaCapture.StopPreviewAsync();
-
-                KameraButton.Content = "Camera View";
-                ImageListButton.Content = "Images List";
-                Data.Data.CameraTurnOn = false;
-            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -140,31 +67,5 @@ namespace Pat_1
             }
         }
 
-        private async void Button_Loaded(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Data.Data._MediaCapture = new MediaCapture();
-                await Data.Data._MediaCapture.InitializeAsync();
-                kamera.Source = Data.Data._MediaCapture;
-                KameraButton.Content = "Camera View";
-                KameraButton.IsEnabled = true;
-            }
-            catch
-            {
-                KameraButton.Content = "Can't find camera";
-                KameraButton.IsEnabled = false;
-            }
-        }
-
-        private void Share(object sender, RoutedEventArgs e)
-        {
-            DataTransferManager.ShowShareUI();
-        }
-
-        private void main_grid_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            ViewModel.resolution_update();
-        }
     }
 }

@@ -1,13 +1,17 @@
-﻿using System;
+﻿using Pat_1.Pomocnicze;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Email;
 using Windows.Foundation;
 using Windows.Media.Capture;
+using Windows.Media.MediaProperties;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
@@ -21,16 +25,140 @@ namespace Pat_1.ViewModel
 {
     public class ViewModelMain : ViewModelBase
     {
+        public ICommand CameraViewCommand { get; set; }
+        public ICommand ImageListCommand { get; set; }
+        public ICommand ShareCommand { get; set; }
+        public ICommand TheTapCommand { get; set; }
 
-        public ViewModelMain()
+        private CaptureElement camera_source;
+        private MediaCapture takephotoManager;
+
+        public ViewModelMain(ref CaptureElement ce)
         {
-            resolution_update();
+            camera_source = ce;
+            takephotoManager = new MediaCapture();
+
+            var task = CameraTest(); 
+
+            CameraViewCommand = new Pomocnicze.RelayCommand(pars => CameraViewButton());
+            ImageListCommand = new Pomocnicze.RelayCommand(pars => ImageListButton());
+            ShareCommand = new Pomocnicze.RelayCommand(pars => ShareButton());
+            TheTapCommand = new Pomocnicze.RelayCommand(pars => NastepnyObrazek());
+
             var wczytywanie_obr = wczytywanie_obrazka();
             Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested +=App_BackRequested;
 
             DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
             dataTransferManager.DataRequested += new TypedEventHandler<DataTransferManager, DataRequestedEventArgs>(this.ShareImageHandler);
 
+            CameraButtonName = "Camera View";
+            ImageListButtonName = "Images List";
+            ShareButtonName = "Share";
+
+            ShareButtonIsEnable = true;
+        }
+
+        private void ShareButton()
+        {
+            DataTransferManager.ShowShareUI();
+        }
+
+        private void CameraViewButton()
+        {
+            var task = CameraViewButton_async();
+        }
+
+        private async Task CameraTest()
+        {
+            try
+            {
+                takephotoManager = new MediaCapture();
+                await takephotoManager.InitializeAsync();
+                camera_source.Source = takephotoManager;
+                CameraButtonName = "Camera View";
+                CameraButtonIsEnable = true;
+            }
+            catch
+            {
+                CameraButtonName = "Camera not found";
+                CameraButtonIsEnable = false;
+            }
+        }
+
+        private async Task CameraViewButton_async()
+        {
+            if (Data.Data.CameraTurnOn == false)
+            {
+                try
+                {
+                    takephotoManager = new MediaCapture();
+                    await takephotoManager.InitializeAsync();
+                    camera_source.Source = takephotoManager;
+                    await takephotoManager.StartPreviewAsync();
+                    ImageListButtonName = "Close Camera";
+                    Data.Data.CameraTurnOn = true;
+                    CameraButtonName = "Take a foto";
+                    ShareButtonIsEnable = false;
+                }
+                catch
+                {
+                    ImageListButtonName = "Images List";
+                    ShareButtonIsEnable = true;
+                }
+            }
+            else
+            {
+
+                ImageEncodingProperties imgFormat = ImageEncodingProperties.CreateJpeg();
+
+                StorageFile file;
+                int i = 0;
+                while (true)
+                {
+                    try
+                    {
+                        file = await Windows.Storage.KnownFolders.PicturesLibrary.CreateFileAsync
+                             ("Photo" + i.ToString() + ".jpg", CreationCollisionOption.FailIfExists);
+                        break;
+                    }
+                    catch
+                    {
+                        i++;
+                        continue;
+                    }
+                }
+
+                await takephotoManager.CapturePhotoToStorageFileAsync(imgFormat, file);
+                await takephotoManager.StopPreviewAsync();
+
+                CameraButtonName = "Camera View";
+                ImageListButtonName = "Images List";
+                Data.Data.CameraTurnOn = false;
+                ShareButtonIsEnable = true;
+
+                Data.Data.czy_wczytano_dane = false;
+                var task = wczytywanie_obrazka();
+
+            }
+        }
+
+        private async void ImageListButton()
+        {
+            if (Data.Data.CameraTurnOn == false)
+            {
+                Data.Data.ktory_obrazek_zaznaczony = -1;
+                Frame rootFrame = Window.Current.Content as Frame;
+                rootFrame.Navigate(typeof(View.ImageList));
+            }
+            else
+            {
+                await takephotoManager.StopPreviewAsync();
+
+                CameraButtonName = "Camera View";
+                ImageListButtonName = "Images List";
+                Data.Data.CameraTurnOn = false;
+                ShareButtonIsEnable = true;
+            }
         }
 
         public void NastepnyObrazek()
@@ -60,27 +188,6 @@ namespace Pat_1.ViewModel
             }
         }
 
-        public async Task reflesh_po_zdjeciu()
-        {
-            StorageFolder pictures_folder = Windows.Storage.KnownFolders.PicturesLibrary;
-
-            Data.Data.fileList = await pictures_folder.GetFilesAsync();
-
-        }
-
-        public void resolution_update()
-        {
-            var bounds = Window.Current.Bounds;
-
-            picture_height = bounds.Height * 0.65;
-            border_height = bounds.Height * 0.15;
-            button_height = bounds.Height * 0.1;
-
-            picture_width = bounds.Width * 0.95;
-            border_width = bounds.Width * 0.75;
-            button_width = bounds.Width * 0.28;
-        }
-
         private async Task wczytywanie_obrazka()
         {
 
@@ -94,7 +201,7 @@ namespace Pat_1.ViewModel
 
             if(fileList.Count > 0)
             {
-                if (Data.Data.ktory_obrazek_zaznaczony > fileList.Count - 1 )
+                if (Data.Data.ktory_obrazek_zaznaczony > fileList.Count - 1 || Data.Data.ktory_obrazek_zaznaczony == -1 )
                     Data.Data.ktory_obrazek_zaznaczony = 0;
 
                 ImageProperties metadata_obrazka = await fileList[Data.Data.ktory_obrazek_zaznaczony].Properties.GetImagePropertiesAsync();
@@ -105,14 +212,6 @@ namespace Pat_1.ViewModel
 
                     await bitmapImage.SetSourceAsync(fileStream);
                     adres_img = bitmapImage;
-
-                    picture_height = bounds.Height * 0.65;
-                    border_height = bounds.Height * 0.15;
-                    button_height = bounds.Height * 0.1;
-
-                    picture_width = bounds.Width * 0.95;
-                    border_width = bounds.Width * 0.75;
-                    button_width = bounds.Width * 0.2;
 
                     text = "Nazwa obrazka: " + fileList[Data.Data.ktory_obrazek_zaznaczony].DisplayName + Environment.NewLine +
                            "Data stworzenia: " + metadata_obrazka.DateTaken;
@@ -184,9 +283,7 @@ namespace Pat_1.ViewModel
             Frame rootFrame = Window.Current.Content as Frame;
             if (rootFrame == null)
                 return;
-
-            // Navigate back if possible, and if the event has not 
-            // already been handled .
+            
             if (rootFrame.CanGoBack && e.Handled == false)
             {
                 e.Handled = true;
@@ -211,109 +308,7 @@ namespace Pat_1.ViewModel
                     PropertyChangedUpdate("adres_img");
                 }
             }
-        }
-
-        double _picture_height;
-        public double picture_height
-        {
-            get
-            {
-                return _picture_height;
-            }
-            set
-            {
-                if (_picture_height != value)
-                {
-                    _picture_height = value;
-                    PropertyChangedUpdate("picture_height");
-                }
-            }
-        }
-
-        double _picture_width;
-        public double picture_width
-        {
-            get
-            {
-                return _picture_width;
-            }
-            set
-            {
-                if (_picture_width != value)
-                {
-                    _picture_width = value;
-                    PropertyChangedUpdate("picture_width");
-                }
-            }
-        }
-
-        double _border_width;
-        public double border_width
-        {
-            get
-            {
-                return _border_width;
-            }
-            set
-            {
-                if (_border_width != value)
-                {
-                    _border_width = value;
-                    PropertyChangedUpdate("border_width");
-                }
-            }
-        }
-        
-        double _border_height;
-        public double border_height
-        {
-            get
-            {
-                return _border_height;
-            }
-            set
-            {
-                if (_border_height != value)
-                {
-                    _border_height = value;
-                    PropertyChangedUpdate("border_height");
-                }
-            }
-        }
-
-        double _button_width;
-        public double button_width
-        {
-            get
-            {
-                return _button_width;
-            }
-            set
-            {
-                if (_button_width != value)
-                {
-                    _button_width = value;
-                    PropertyChangedUpdate("button_width");
-                }
-            }
-        }
-
-        double _button_height;
-        public double button_height
-        {
-            get
-            {
-                return _button_height;
-            }
-            set
-            {
-                if (_button_height != value)
-                {
-                    _button_height = value;
-                    PropertyChangedUpdate("button_height");
-                }
-            }
-        }
+        }        
 
         string _text;
         public string text
@@ -328,6 +323,91 @@ namespace Pat_1.ViewModel
                 {
                     _text = value;
                     PropertyChangedUpdate("text");
+                }
+            }
+        }
+
+        string _CameraButtonName;
+        public string CameraButtonName
+        {
+            get
+            {
+                return _CameraButtonName;
+            }
+            set
+            {
+                if (_CameraButtonName != value)
+                {
+                    _CameraButtonName = value;
+                    PropertyChangedUpdate("CameraButtonName");
+                }
+            }
+        }
+
+        string _ImageListButtonName;
+        public string ImageListButtonName
+        {
+            get
+            {
+                return _ImageListButtonName;
+            }
+            set
+            {
+                if (_ImageListButtonName != value)
+                {
+                    _ImageListButtonName = value;
+                    PropertyChangedUpdate("ImageListButtonName");
+                }
+            }
+        }
+
+        string _ShareButtonName;
+        public string ShareButtonName
+        {
+            get
+            {
+                return _ShareButtonName;
+            }
+            set
+            {
+                if (_ShareButtonName != value)
+                {
+                    _ShareButtonName = value;
+                    PropertyChangedUpdate("ShareButtonName");
+                }
+            }
+        }
+        
+        bool _CameraButtonIsEnable;
+        public bool CameraButtonIsEnable
+        {
+            get
+            {
+                return _CameraButtonIsEnable;
+            }
+            set
+            {
+                if (_CameraButtonIsEnable != value)
+                {
+                    _CameraButtonIsEnable = value;
+                    PropertyChangedUpdate("CameraButtonIsEnable");
+                }
+            }
+        }
+
+        bool _ShareButtonIsEnable;
+        public bool ShareButtonIsEnable
+        {
+            get
+            {
+                return _ShareButtonIsEnable;
+            }
+            set
+            {
+                if (_ShareButtonIsEnable != value)
+                {
+                    _ShareButtonIsEnable = value;
+                    PropertyChangedUpdate("ShareButtonIsEnable");
                 }
             }
         }

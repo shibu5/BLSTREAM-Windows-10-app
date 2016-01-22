@@ -199,3 +199,11 @@ C:\Users\Shibu\Documents\GitHub\BLSTREAM-Windows-10-app\Pat_1\Pat_1\obj\x86\Debu
 C:\Users\Shibu\Documents\GitHub\BLSTREAM-Windows-10-app\Pat_1\Pat_1\obj\x86\Debug\View\ImageList.xaml
 C:\Users\Shibu\Documents\GitHub\BLSTREAM-Windows-10-app\Pat_1\Pat_1\obj\x86\Debug\View\ImageList.xbf
 C:\Users\Shibu\Documents\GitHub\BLSTREAM-Windows-10-app\Pat_1\Pat_1\bin\x86\Debug\View\ImageList.xbf
+C:\Users\Shibu\Documents\GitHub\BLSTREAM-Windows-10-app\Pat_1\Pat_1\bin\x86\Debug\TapCommandControl.xbf
+C:\Users\Shibu\Documents\GitHub\BLSTREAM-Windows-10-app\Pat_1\Pat_1\bin\x86\Debug\Themes\Generic.xbf
+C:\Users\Shibu\Documents\GitHub\BLSTREAM-Windows-10-app\Pat_1\Pat_1\obj\x86\Debug\TapCommandControl.g.i.cs
+C:\Users\Shibu\Documents\GitHub\BLSTREAM-Windows-10-app\Pat_1\Pat_1\obj\x86\Debug\TapCommandControl.g.cs
+C:\Users\Shibu\Documents\GitHub\BLSTREAM-Windows-10-app\Pat_1\Pat_1\obj\x86\Debug\TapCommandControl.xaml
+C:\Users\Shibu\Documents\GitHub\BLSTREAM-Windows-10-app\Pat_1\Pat_1\obj\x86\Debug\Themes\Generic.xaml
+C:\Users\Shibu\Documents\GitHub\BLSTREAM-Windows-10-app\Pat_1\Pat_1\obj\x86\Debug\TapCommandControl.xbf
+C:\Users\Shibu\Documents\GitHub\BLSTREAM-Windows-10-app\Pat_1\Pat_1\obj\x86\Debug\Themes\Generic.xbf

@@ -132,25 +132,23 @@ namespace Pat_1.Pat_1_XamlTypeInfo
 
         private void InitTypeTables()
         {
-            _typeNameTable = new string[8];
-            _typeNameTable[0] = "Pat_1.View.ImageList";
-            _typeNameTable[1] = "Windows.UI.Xaml.Controls.Page";
-            _typeNameTable[2] = "Windows.UI.Xaml.Controls.UserControl";
-            _typeNameTable[3] = "Pat_1.ViewModel.ViewModel_ImageList";
-            _typeNameTable[4] = "Pat_1.ViewModel.ViewModelBase";
-            _typeNameTable[5] = "Object";
+            _typeNameTable = new string[7];
+            _typeNameTable[0] = "Pat_1.TapCommandControl";
+            _typeNameTable[1] = "Windows.UI.Xaml.Controls.UserControl";
+            _typeNameTable[2] = "System.Windows.Input.ICommand";
+            _typeNameTable[3] = "Object";
+            _typeNameTable[4] = "Pat_1.View.ImageList";
+            _typeNameTable[5] = "Windows.UI.Xaml.Controls.Page";
             _typeNameTable[6] = "Pat_1.MainPage";
-            _typeNameTable[7] = "Pat_1.ViewModel.ViewModelMain";
 
-            _typeTable = new global::System.Type[8];
-            _typeTable[0] = typeof(global::Pat_1.View.ImageList);
-            _typeTable[1] = typeof(global::Windows.UI.Xaml.Controls.Page);
-            _typeTable[2] = typeof(global::Windows.UI.Xaml.Controls.UserControl);
-            _typeTable[3] = typeof(global::Pat_1.ViewModel.ViewModel_ImageList);
-            _typeTable[4] = typeof(global::Pat_1.ViewModel.ViewModelBase);
-            _typeTable[5] = typeof(global::System.Object);
+            _typeTable = new global::System.Type[7];
+            _typeTable[0] = typeof(global::Pat_1.TapCommandControl);
+            _typeTable[1] = typeof(global::Windows.UI.Xaml.Controls.UserControl);
+            _typeTable[2] = typeof(global::System.Windows.Input.ICommand);
+            _typeTable[3] = typeof(global::System.Object);
+            _typeTable[4] = typeof(global::Pat_1.View.ImageList);
+            _typeTable[5] = typeof(global::Windows.UI.Xaml.Controls.Page);
             _typeTable[6] = typeof(global::Pat_1.MainPage);
-            _typeTable[7] = typeof(global::Pat_1.ViewModel.ViewModelMain);
         }
 
         private int LookupTypeIndexByName(string typeName)
@@ -185,11 +183,9 @@ namespace Pat_1.Pat_1_XamlTypeInfo
             return -1;
         }
 
-        private object Activate_0_ImageList() { return new global::Pat_1.View.ImageList(); }
-        private object Activate_3_ViewModel_ImageList() { return new global::Pat_1.ViewModel.ViewModel_ImageList(); }
-        private object Activate_4_ViewModelBase() { return new global::Pat_1.ViewModel.ViewModelBase(); }
+        private object Activate_0_TapCommandControl() { return new global::Pat_1.TapCommandControl(); }
+        private object Activate_4_ImageList() { return new global::Pat_1.View.ImageList(); }
         private object Activate_6_MainPage() { return new global::Pat_1.MainPage(); }
-        private object Activate_7_ViewModelMain() { return new global::Pat_1.ViewModel.ViewModelMain(); }
 
         private global::Windows.UI.Xaml.Markup.IXamlType CreateXamlType(int typeIndex)
         {
@@ -201,51 +197,43 @@ namespace Pat_1.Pat_1_XamlTypeInfo
             switch (typeIndex)
             {
 
-            case 0:   //  Pat_1.View.ImageList
-                userType = new global::Pat_1.Pat_1_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_0_ImageList;
-                userType.AddMemberName("ViewModel");
+            case 0:   //  Pat_1.TapCommandControl
+                userType = new global::Pat_1.Pat_1_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.UserControl"));
+                userType.Activator = Activate_0_TapCommandControl;
+                userType.AddMemberName("TapCommand");
+                userType.AddMemberName("TapCommandParameter");
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 1:   //  Windows.UI.Xaml.Controls.Page
+            case 1:   //  Windows.UI.Xaml.Controls.UserControl
                 xamlType = new global::Pat_1.Pat_1_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 2:   //  Windows.UI.Xaml.Controls.UserControl
-                xamlType = new global::Pat_1.Pat_1_XamlTypeInfo.XamlSystemBaseType(typeName, type);
-                break;
-
-            case 3:   //  Pat_1.ViewModel.ViewModel_ImageList
-                userType = new global::Pat_1.Pat_1_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Pat_1.ViewModel.ViewModelBase"));
+            case 2:   //  System.Windows.Input.ICommand
+                userType = new global::Pat_1.Pat_1_XamlTypeInfo.XamlUserType(this, typeName, type, null);
                 userType.SetIsReturnTypeStub();
+                xamlType = userType;
+                break;
+
+            case 3:   //  Object
+                xamlType = new global::Pat_1.Pat_1_XamlTypeInfo.XamlSystemBaseType(typeName, type);
+                break;
+
+            case 4:   //  Pat_1.View.ImageList
+                userType = new global::Pat_1.Pat_1_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
+                userType.Activator = Activate_4_ImageList;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 4:   //  Pat_1.ViewModel.ViewModelBase
-                userType = new global::Pat_1.Pat_1_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.Activator = Activate_4_ViewModelBase;
-                userType.SetIsLocalType();
-                xamlType = userType;
-                break;
-
-            case 5:   //  Object
+            case 5:   //  Windows.UI.Xaml.Controls.Page
                 xamlType = new global::Pat_1.Pat_1_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
             case 6:   //  Pat_1.MainPage
                 userType = new global::Pat_1.Pat_1_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
                 userType.Activator = Activate_6_MainPage;
-                userType.AddMemberName("ViewModel");
-                userType.SetIsLocalType();
-                xamlType = userType;
-                break;
-
-            case 7:   //  Pat_1.ViewModel.ViewModelMain
-                userType = new global::Pat_1.Pat_1_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Pat_1.ViewModel.ViewModelBase"));
-                userType.SetIsReturnTypeStub();
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
@@ -254,15 +242,25 @@ namespace Pat_1.Pat_1_XamlTypeInfo
         }
 
 
-        private object get_0_ImageList_ViewModel(object instance)
+        private object get_0_TapCommandControl_TapCommand(object instance)
         {
-            var that = (global::Pat_1.View.ImageList)instance;
-            return that.ViewModel;
+            var that = (global::Pat_1.TapCommandControl)instance;
+            return that.TapCommand;
         }
-        private object get_1_MainPage_ViewModel(object instance)
+        private void set_0_TapCommandControl_TapCommand(object instance, object Value)
         {
-            var that = (global::Pat_1.MainPage)instance;
-            return that.ViewModel;
+            var that = (global::Pat_1.TapCommandControl)instance;
+            that.TapCommand = (global::System.Windows.Input.ICommand)Value;
+        }
+        private object get_1_TapCommandControl_TapCommandParameter(object instance)
+        {
+            var that = (global::Pat_1.TapCommandControl)instance;
+            return that.TapCommandParameter;
+        }
+        private void set_1_TapCommandControl_TapCommandParameter(object instance, object Value)
+        {
+            var that = (global::Pat_1.TapCommandControl)instance;
+            that.TapCommandParameter = (global::System.Object)Value;
         }
 
         private global::Windows.UI.Xaml.Markup.IXamlMember CreateXamlMember(string longMemberName)
@@ -272,17 +270,17 @@ namespace Pat_1.Pat_1_XamlTypeInfo
 
             switch (longMemberName)
             {
-            case "Pat_1.View.ImageList.ViewModel":
-                userType = (global::Pat_1.Pat_1_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Pat_1.View.ImageList");
-                xamlMember = new global::Pat_1.Pat_1_XamlTypeInfo.XamlMember(this, "ViewModel", "Pat_1.ViewModel.ViewModel_ImageList");
-                xamlMember.Getter = get_0_ImageList_ViewModel;
-                xamlMember.SetIsReadOnly();
+            case "Pat_1.TapCommandControl.TapCommand":
+                userType = (global::Pat_1.Pat_1_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Pat_1.TapCommandControl");
+                xamlMember = new global::Pat_1.Pat_1_XamlTypeInfo.XamlMember(this, "TapCommand", "System.Windows.Input.ICommand");
+                xamlMember.Getter = get_0_TapCommandControl_TapCommand;
+                xamlMember.Setter = set_0_TapCommandControl_TapCommand;
                 break;
-            case "Pat_1.MainPage.ViewModel":
-                userType = (global::Pat_1.Pat_1_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Pat_1.MainPage");
-                xamlMember = new global::Pat_1.Pat_1_XamlTypeInfo.XamlMember(this, "ViewModel", "Pat_1.ViewModel.ViewModelMain");
-                xamlMember.Getter = get_1_MainPage_ViewModel;
-                xamlMember.SetIsReadOnly();
+            case "Pat_1.TapCommandControl.TapCommandParameter":
+                userType = (global::Pat_1.Pat_1_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Pat_1.TapCommandControl");
+                xamlMember = new global::Pat_1.Pat_1_XamlTypeInfo.XamlMember(this, "TapCommandParameter", "Object");
+                xamlMember.Getter = get_1_TapCommandControl_TapCommandParameter;
+                xamlMember.Setter = set_1_TapCommandControl_TapCommandParameter;
                 break;
             }
             return xamlMember;

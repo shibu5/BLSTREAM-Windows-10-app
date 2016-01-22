@@ -4,22 +4,26 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="clr-namespace:Pat_1.ViewModel" xmlns:helpers="using:Pat_1.Pomocnicze">
-    <Grid x:Name="main_grid"  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" SizeChanged="main_grid_SizeChanged">
+    xmlns:vm="clr-namespace:Pat_1.ViewModel" xmlns:helpers="using:Pat_1.Pomocnicze"
+    xmlns:local="using:Pat_1">
+    
+    <Grid x:Name="main_grid"  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel>
-            <Grid Margin="0,15,0,15" Height="{Binding picture_height}" Width="{Binding picture_width}">
-                <Image Source ="{Binding adres_img}" Tapped="Image_Tapped" />
-                <CaptureElement x:Name="kamera" />
+            <Grid x:Name="Grid_Image" Margin="0,15,0,15" Height="350" Width="325">
+                <local:TapCommandControl TapCommand="{Binding TheTapCommand}">
+                    <Image Source ="{Binding adres_img}" />
+                </local:TapCommandControl>
+                <CaptureElement x:Name="camera" />
             </Grid>
-            <Border BorderThickness="2,2,2,2" BorderBrush="#FF4A79A0" HorizontalAlignment="Center" Width="{Binding border_width}" Height="{Binding border_height}">
+            <Border BorderThickness="2,2,2,2" BorderBrush="#FF4A79A0" HorizontalAlignment="Center" Width="300" Height="150">
                 <ScrollViewer>
                     <TextBlock Text="{Binding text}" TextWrapping="Wrap" />
                 </ScrollViewer>
             </Border>
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,5,0,0">
-                <Button x:Name="KameraButton" Content="Take Picture" HorizontalAlignment="Center" Margin="1,0,0,0" Click="Button_Click" Loaded="Button_Loaded" Height="{Binding button_height}" Width="{Binding button_width}"/>
-                <Button x:Name="ImageListButton" Content="Images List" HorizontalAlignment="Center" Margin="1,0,0,0" Click="Button_Click_1" Height="{Binding button_height}" Width="{Binding button_width}"/>
-                <Button Content="Share" HorizontalAlignment="Center" Margin="1,0,0,0" Click="Share" Height="{Binding button_height}" Width="{Binding button_width}"/>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,25,0,0">
+                <Button Command="{Binding CameraViewCommand}" Content="{Binding CameraButtonName}" Height="50" Width="145" HorizontalAlignment="Center" Margin="1,10,0,0" IsEnabled="{Binding CameraButtonIsEnable}" />
+                <Button Command="{Binding ImageListCommand}" Content="{Binding ImageListButtonName}" Height="50" Width="145" HorizontalAlignment="Center" Margin="1,10,0,0"/>
+                <Button Command="{Binding ShareCommand}" Content="{Binding ShareButtonName}" Height="50" Width="145" HorizontalAlignment="Center" Margin="1,10,0,0" IsEnabled="{Binding ShareButtonIsEnable}"/>
             </StackPanel>
         </StackPanel>
     </Grid>

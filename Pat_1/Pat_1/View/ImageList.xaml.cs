@@ -29,19 +29,6 @@ namespace Pat_1.View
             this.DataContext = new ViewModel.ViewModel_ImageList();
         }
 
-        public ViewModel.ViewModel_ImageList ViewModel
-        {
-            get { return DataContext as ViewModel.ViewModel_ImageList; }
-        }
-
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (Lista_obrazkow.SelectedIndex != -1)
-            {
-                ViewModel.wybrano_obrazek();
-                this.Frame.Navigate(typeof(MainPage));
-            }
-        }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
