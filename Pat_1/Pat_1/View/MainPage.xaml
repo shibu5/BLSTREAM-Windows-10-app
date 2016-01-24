@@ -9,11 +9,13 @@
     
     <Grid x:Name="main_grid"  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel>
-            <Grid x:Name="Grid_Image" Margin="0,15,0,15" Height="350" Width="325">
-                <local:TapCommandControl TapCommand="{Binding TheTapCommand}">
+            <Grid Margin="0,15,0,15" Height="350" Width="325">
+                <local:TapCommandControl TapCommand="{Binding PictureTapCommand}">
                     <Image Source ="{Binding adres_img}" />
                 </local:TapCommandControl>
-                <CaptureElement x:Name="camera" />
+                <local:TapCommandControl TapCommand="{Binding PictureTapCommand}">
+                    <CaptureElement x:Name="capture_element" />
+                </local:TapCommandControl>
             </Grid>
             <Border BorderThickness="2,2,2,2" BorderBrush="#FF4A79A0" HorizontalAlignment="Center" Width="300" Height="150">
                 <ScrollViewer>

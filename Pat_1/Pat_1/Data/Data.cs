@@ -10,11 +10,10 @@ namespace Pat_1.Data
 {
     public static class Data
     {
-        static public int ktory_obrazek_zaznaczony = 0;
-        static public bool czy_wczytano_dane = false;
+        static public int CurrentlySelectedImageId = 0;
+        static public bool IsDataLoaded = false;
 
-        static public IReadOnlyList<StorageFile> fileList;
-        static public MediaCapture _MediaCapture;
-        static public bool CameraTurnOn = false;
+        static public IReadOnlyList<StorageFile> PhotoList;
+        static public bool CameraIsTurnOn = false;
     }
 }

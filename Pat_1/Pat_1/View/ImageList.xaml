@@ -8,11 +8,11 @@
     mc:Ignorable="d" xmlns:local2="using:Pat_1">
 
        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
-        <local2:TapCommandControl TapCommand="{Binding TheTapCommand}">
-            <ListView x:Name="Lista_obrazkow" HorizontalAlignment="Center" Margin="0,1,0,0" VerticalAlignment="Top" ItemsSource="{Binding lista}" SelectedItem="{Binding selecteditem,Mode=TwoWay}" >
+        <local2:TapCommandControl TapCommand="{Binding ImagesListSelectionChangedCommand}">
+            <ListView Height="615" x:Name="Lista_obrazkow" HorizontalAlignment="Center" Margin="0,1,0,0" VerticalAlignment="Top" ItemsSource="{Binding lista}" SelectedItem="{Binding selecteditem,Mode=TwoWay}" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <Border Margin="0,1,0,0" BorderThickness="2" Height="100" Width="150" >
                                 <Border.BorderBrush>
                                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -29,7 +29,7 @@
                                         <GradientStop Color="#FFE04D4D" Offset="1"/>
                                     </LinearGradientBrush>
                                 </Border.BorderBrush>
-                                <TextBlock Text="{Binding Nazwa}" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto"/>
+                                <TextBlock Text="{Binding Nazwa}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                             </Border>
                         </StackPanel>
                     </DataTemplate>

@@ -15,30 +15,39 @@ namespace Pat_1.ViewModel
     public class ViewModel_ImageList : ViewModelBase
     {
 
-        public ICommand TheTapCommand { get; set; }
+        public ICommand ImagesListSelectionChangedCommand { get; set; }
 
         public ViewModel_ImageList()
         {
 
-            lista = new ObservableCollection<Model.lista_klasa>();
+            lista = new ObservableCollection<Model.ClassList>();
 
-            if (Data.Data.fileList.Count > 0)
+            if (Data.Data.PhotoList.Count > 0)
             {
 
-                var wczytywanie_o = wczytywanie_obrazkow();
-                
+                var wczytywanie_o = ImagesLoading_task();
+
             }
 
-            TheTapCommand = new Pomocnicze.RelayCommand(pars => wybrano_obrazek());
+            ImagesListSelectionChangedCommand = new Pomocnicze.RelayCommand(pars => NextPicture());
 
         }
 
-        private async Task wczytywanie_obrazkow()
+        public void NextPicture()
         {
-            var bounds = Window.Current.Bounds;
+            if (selecteditem.id != Data.Data.CurrentlySelectedImageId)
+            {
+                Data.Data.CurrentlySelectedImageId = selecteditem.id;
+                Frame rootFrame = Window.Current.Content as Frame;
+                rootFrame.Navigate(typeof(MainPage));
+            }
+        }
+
+        private async Task ImagesLoading_task()
+        {
 
             int i = 0;
-            foreach (var x in Data.Data.fileList)
+            foreach (var x in Data.Data.PhotoList)
             {
                 using (IRandomAccessStream fileStream = await x.OpenAsync(Windows.Storage.FileAccessMode.Read))
                 {
@@ -47,30 +56,15 @@ namespace Pat_1.ViewModel
 
                     await bitmapImage.SetSourceAsync(fileStream);
 
-                    int wysokosc1 = Convert.ToInt32(bounds.Height * 0.25);
-
-                    int szerokosc1 = Convert.ToInt32(bounds.Width * 0.4);
-                    int szerokosc2 = Convert.ToInt32(bounds.Width * 0.55);
-
-                    lista.Add(new Model.lista_klasa { Nazwa = x.Name, Image = bitmapImage, id = i, wysokosc1 = wysokosc1, szerokosc1 = szerokosc1, szerokosc2 = szerokosc2 });
+                    lista.Add(new Model.ClassList { Nazwa = x.Name, Image = bitmapImage, id = i });
 
                 }
                 i++;
             }
         }
 
-        public void wybrano_obrazek()
-        {
-            if (selecteditem.id != Data.Data.ktory_obrazek_zaznaczony)
-            {
-                Data.Data.ktory_obrazek_zaznaczony = selecteditem.id;
-                Frame rootFrame = Window.Current.Content as Frame;
-                rootFrame.Navigate(typeof(MainPage));
-            }
-        }
-
-        private Model.lista_klasa _selecteditem;
-        public Model.lista_klasa selecteditem
+        private Model.ClassList _selecteditem;
+        public Model.ClassList selecteditem
         {
             get { return _selecteditem; }
             set
@@ -83,15 +77,15 @@ namespace Pat_1.ViewModel
             }
         }
 
-        private ObservableCollection<Model.lista_klasa> lista_;
-        public ObservableCollection<Model.lista_klasa> lista
+        private ObservableCollection<Model.ClassList> _lista;
+        public ObservableCollection<Model.ClassList> lista
         {
-            get { return lista_; }
+            get { return _lista; }
             set
             {
-                if (lista_ != value)
+                if (_lista != value)
                 {
-                    lista_ = value;
+                    _lista = value;
                     PropertyChangedUpdate("lista");
                 }
             }
